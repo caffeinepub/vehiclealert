@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/assets/fonts/BricolageGrotesque.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/assets/fonts/PlusJakartaSans.woff2") format("woff2");
+  font-weight: 300 700;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 0.625rem;
+    /* Brand navy #1F2F4A */
+    --primary: 0.27 0.058 248;
+    --primary-foreground: 1 0 0;
+    /* Page background #F3F6FA */
+    --background: 0.97 0.012 243;
+    --foreground: 0.15 0.04 248;
+    /* Card white */
+    --card: 1 0 0;
+    --card-foreground: 0.15 0.04 248;
+    --popover: 1 0 0;
+    --popover-foreground: 0.15 0.04 248;
+    /* Secondary / muted #6B7280 */
+    --secondary: 0.93 0.015 243;
+    --secondary-foreground: 0.27 0.058 248;
+    --muted: 0.93 0.015 243;
+    --muted-foreground: 0.55 0.012 258;
+    /* Accent */
+    --accent: 0.93 0.015 243;
+    --accent-foreground: 0.27 0.058 248;
+    /* Destructive / urgent #E24A4A */
+    --destructive: 0.57 0.185 26;
+    --destructive-foreground: 1 0 0;
+    --border: 0.91 0.015 243;
+    --input: 0.91 0.015 243;
+    --ring: 0.27 0.058 248;
+    /* Status colors */
+    --urgent: 0.57 0.185 26;
+    --urgent-bg: 0.95 0.04 26;
+    --due-soon: 0.74 0.17 73;
+    --due-soon-bg: 0.97 0.04 73;
+    --ok: 0.73 0.19 148;
+    --ok-bg: 0.97 0.04 148;
+    --upcoming: 0.5 0.15 265;
+    --upcoming-bg: 0.95 0.02 265;
+    --expired: 0.4 0.14 26;
+    --expired-bg: 0.88 0.06 26;
+    /* Charts */
+    --chart-1: 0.57 0.185 26;
+    --chart-2: 0.74 0.17 73;
+    --chart-3: 0.73 0.19 148;
+    --chart-4: 0.5 0.15 265;
+    --chart-5: 0.27 0.058 248;
+    --sidebar: 0.27 0.058 248;
+    --sidebar-foreground: 1 0 0;
+    --sidebar-primary: 0.97 0.012 243;
+    --sidebar-primary-foreground: 0.27 0.058 248;
+    --sidebar-accent: 0.35 0.07 248;
+    --sidebar-accent-foreground: 1 0 0;
+    --sidebar-border: 0.35 0.07 248;
+    --sidebar-ring: 0.97 0.012 243;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Bricolage Grotesque", sans-serif;
+  }
+}
