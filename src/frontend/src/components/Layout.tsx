@@ -52,13 +52,10 @@ export default function Layout({ children }: LayoutProps) {
             data-ocid="nav.link"
           >
             <img
-              src="/assets/generated/kocuparambil-logo.jpg"
-              alt="KOCHUPARAMBIL"
-              className="w-10 h-10 object-contain rounded"
+              src="/assets/generated/kochuparambil-header.png"
+              alt="Kochuparambil Group of Venture"
+              className="h-10 object-contain"
             />
-            <span className="font-display font-bold italic text-xl text-primary uppercase">
-              KOCHUPARAMBIL
-            </span>
           </Link>
 
           {/* Desktop Nav */}

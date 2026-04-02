@@ -19,13 +19,10 @@ export default function LoginScreen() {
         >
           <div className="flex items-center gap-3">
             <img
-              src="/assets/generated/kocuparambil-logo.jpg"
-              alt="KOCHUPARAMBIL"
-              className="w-14 h-14 object-contain rounded-lg"
+              src="/assets/generated/kochuparambil-header.png"
+              alt="Kochuparambil Group of Venture"
+              className="h-14 object-contain"
             />
-            <span className="font-display text-3xl font-bold italic text-primary uppercase">
-              KOCHUPARAMBIL
-            </span>
           </div>
           <h1 className="font-display text-4xl font-bold text-foreground leading-tight">
             Never miss a vehicle deadline again

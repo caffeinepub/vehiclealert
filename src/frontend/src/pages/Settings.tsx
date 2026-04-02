@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,18 +9,39 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Bell, Database, Shield } from "lucide-react";
+import { Bell, Database, Download, Shield, Upload } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   type AppSettings,
   DEFAULT_SETTINGS,
   loadSettings,
   saveSettings,
 } from "../hooks/useQueries";
+import type { Vehicle } from "../types";
+
+const STORAGE_KEY = "kochuparambil_vehicles";
+
+function exportVehicles() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  const vehicles: Vehicle[] = raw ? JSON.parse(raw) : [];
+  const blob = new Blob([JSON.stringify(vehicles, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `kochuparambil-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 export default function Settings() {
   const [thresholds, setThresholds] = useState<AppSettings>(loadSettings);
+  const [importStatus, setImportStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggle = (k: keyof AppSettings) => {
     setThresholds((p) => {
@@ -27,6 +49,27 @@ export default function Settings() {
       saveSettings(next);
       return next;
     });
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target?.result as string) as Vehicle[];
+        if (!Array.isArray(data)) throw new Error("Invalid format");
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        window.dispatchEvent(new CustomEvent("vehicles-updated"));
+        setImportStatus("success");
+        setTimeout(() => setImportStatus("idle"), 3000);
+      } catch {
+        setImportStatus("error");
+        setTimeout(() => setImportStatus("idle"), 3000);
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
   };
 
   return (
@@ -78,6 +121,84 @@ export default function Settings() {
                 No — works offline
               </Badge>
             </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Backup & Restore */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.05 }}
+      >
+        <Card className="shadow-card">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <Download className="w-4 h-4 text-primary" />
+              <CardTitle className="font-display text-base">
+                Backup &amp; Restore
+              </CardTitle>
+            </div>
+            <CardDescription>
+              Export your vehicles to a file or restore from a previous backup
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-foreground">
+                  Export vehicles
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Download all your vehicle data as a JSON file
+                </p>
+              </div>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={exportVehicles}
+                className="gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Export
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-foreground">
+                  Import vehicles
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Restore from a previously exported backup file
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                {importStatus === "success" && (
+                  <span className="text-xs text-ok font-medium">Imported!</span>
+                )}
+                {importStatus === "error" && (
+                  <span className="text-xs text-urgent font-medium">
+                    Invalid file
+                  </span>
+                )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="gap-1.5"
+                >
+                  <Upload className="w-3.5 h-3.5" />
+                  Import
+                </Button>
+              </div>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={handleImport}
+            />
           </CardContent>
         </Card>
       </motion.div>
